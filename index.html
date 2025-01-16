@@ -5,23 +5,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <title>NestOS</title>
-</head>
-<body>
-
-    <div class="">
-
-     <!-- Sign Up Section -->
-  <div class="flex justify-center items-center  h-[100vh]">
-    <div id="signup-container" class="bg-white p-6 rounded-lg shadow-lg w-80 ">
+    <style>
+        #logout-button {
+          position: fixed;
+          top: 10px;
+          left: 10px;
+          background-color: #ff4d4d;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          color: white;
+          font-size: 18px;
+          cursor: pointer;
+        }
+        #game-switch {
+          position: fixed;
+          bottom: 10px;
+          left: 50%;
+          transform: translateX(-50%);
+          z-index: 10;
+        }
+        #game-switch button {
+          transition: transform 0.2s ease;
+        }
+        #game-switch button:hover {
+          transform: scale(1.1);
+        }
+        .game-cell {
+          transition: background-color 0.2s ease;
+        }
+        .game-cell:hover {
+          background-color: #e2e8f0;
+        }
+        #tic-tac-toe-game, #snake-game, #block-game {
+          animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+      </style>
+    </head>
+    <body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    
+      <!-- Sign Up Section -->
+      <div id="signup-container" class="bg-white p-6 rounded-lg shadow-lg w-96">
         <h2 class="text-2xl font-bold text-gray-800 text-center mb-4">Sign Up</h2>
         <form id="signup-form" class="space-y-4">
           <div>
             <label for="signup-username" class="block text-sm font-medium text-gray-700">Username</label>
-            <input type="text" id="signup-username" class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="Enter your username" required>
+            <input type="text" id="signup-username" class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Enter your username" required>
           </div>
           <div>
             <label for="signup-password" class="block text-sm font-medium text-gray-700">Password</label>
-            <input type="password" id="signup-password" class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="Enter your password" required>
+            <input type="password" id="signup-password" class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Enter your password" required>
           </div>
           <button type="submit" class="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600">Sign Up</button>
         </form>
@@ -30,38 +74,237 @@
           <button id="show-login" class="text-blue-500 hover:underline">Login here</button>
         </p>
       </div>
-  
-
-  <!-- Login Section  -->
-  <div id="login-container" class="hidden bg-white p-6 rounded-lg shadow-lg w-80">
-    <h2 class="text-2xl font-bold text-gray-800 text-center mb-4">Login</h2>
-    <form id="login-form" class="space-y-4">
-      <div>
-        <label for="login-username" class="block text-sm font-medium text-gray-700">Username</label>
-        <input type="text" id="login-username" class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="Enter your username" required>
+    
+      <!-- Login Section -->
+      <div id="login-container" class="hidden bg-white p-6 rounded-lg shadow-lg w-96">
+        <h2 class="text-2xl font-bold text-gray-800 text-center mb-4">Login</h2>
+        <form id="login-form" class="space-y-4">
+          <div>
+            <label for="login-username" class="block text-sm font-medium text-gray-700">Username</label>
+            <input type="text" id="login-username" class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Enter your username" required>
+          </div>
+          <div>
+            <label for="login-password" class="block text-sm font-medium text-gray-700">Password</label>
+            <input type="password" id="login-password" class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Enter your password" required>
+          </div>
+          <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">Login</button>
+        </form>
+        <p class="text-center text-sm text-gray-600 mt-4">
+          Don’t have an account? 
+          <button id="show-signup" class="text-green-500 hover:underline">Sign up here</button>
+        </p>
       </div>
-      <div>
-        <label for="login-password" class="block text-sm font-medium text-gray-700">Password</label>
-        <input type="password" id="login-password" class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="Enter your password" required>
+    
+      <!-- Logout Button -->
+      <div id="logout-button">X</div>
+    
+      <!-- Game Switch Buttons -->
+      <div id="game-switch" class="absolute bottom-10 left-1/2 transform -translate-x-1/2">
+        <button id="show-tic-tac-toe" class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 mb-2">Tic-Tac-Toe</button>
+        <button id="show-snake" class="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600">Snake Game</button>
+        <button id="show-block" class="bg-purple-500 text-white py-2 px-4 rounded-md hover:bg-purple-600">Block Game</button>
       </div>
-      <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">Login</button>
-    </form>
-    <p class="text-center text-sm text-gray-600 mt-4">
-      Don’t have an account? 
-      <button id="show-signup" class="text-green-500 hover:underline">Sign up here</button>
-    </p>
-  </div>
-
-    <!-- Logout Section -->
-    <div class=" ">
-        <div id="logout-container" class="hidden bg-white p-6 rounded-lg shadow-lg w-80 text-center">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">Welcome!</h2>
-            <p class="text-gray-700 mb-6" id="welcome-message"></p>
-            <button id="logout-button" class="w-full bg-red-300 text-white py-2 rounded-md hover:bg-red-600">Logout</button>
+    
+      <!-- Tic-Tac-Toe Game Section -->
+      <div id="tic-tac-toe-game" class="hidden w-full flex flex-col items-center">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Tic-Tac-Toe</h2>
+        <div id="game-board" class="grid grid-cols-3 gap-2 mb-4">
+          <button class="game-cell w-16 h-16 text-2xl bg-gray-200 hover:bg-gray-300 focus:outline-none" data-index="0"></button>
+          <button class="game-cell w-16 h-16 text-2xl bg-gray-200 hover:bg-gray-300 focus:outline-none" data-index="1"></button>
+          <button class="game-cell w-16 h-16 text-2xl bg-gray-200 hover:bg-gray-300 focus:outline-none" data-index="2"></button>
+          <button class="game-cell w-16 h-16 text-2xl bg-gray-200 hover:bg-gray-300 focus:outline-none" data-index="3"></button>
+          <button class="game-cell w-16 h-16 text-2xl bg-gray-200 hover:bg-gray-300 focus:outline-none" data-index="4"></button>
+          <button class="game-cell w-16 h-16 text-2xl bg-gray-200 hover:bg-gray-300 focus:outline-none" data-index="5"></button>
+          <button class="game-cell w-16 h-16 text-2xl bg-gray-200 hover:bg-gray-300 focus:outline-none" data-index="6"></button>
+          <button class="game-cell w-16 h-16 text-2xl bg-gray-200 hover:bg-gray-300 focus:outline-none" data-index="7"></button>
+          <button class="game-cell w-16 h-16 text-2xl bg-gray-200 hover:bg-gray-300 focus:outline-none" data-index="8"></button>
         </div>
-    </div>
-    </div>
-</div>
-  <script src="login.js"></script>
-</body>
+        <button id="restart-tic-tac-toe" class="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 mb-4">Restart Game</button>
+        <p id="user-points" class="font-semibold text-lg">Points: 1000</p>
+      </div>
+    
+      <!-- Snake Game Section -->
+      <div id="snake-game" class="hidden w-full flex flex-col items-center">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Snake Game</h2>
+        <canvas id="snake-board" width="300" height="300" class="bg-gray-200"></canvas>
+        <button id="restart-snake" class="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600 mb-4">Restart Game</button>
+        <p id="snake-user-points" class="font-semibold text-lg">Points: 1000</p>
+      </div>
+    
+      <!-- Block Game Section -->
+      <div id="block-game" class="hidden w-full flex flex-col items-center">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Block Game</h2>
+        <div id="block-container" class="relative w-60 h-60 bg-gray-300">
+          <!-- Block will appear inside this container -->
+        </div>
+        <button id="restart-block" class="w-full bg-purple-500 text-white py-2 rounded-md hover:bg-purple-600 mb-4">Restart Game</button>
+        <p id="block-user-points" class="font-semibold text-lg">Points: 1000</p>
+      </div>
+    
+      <script>
+        const signupForm = document.getElementById('signup-form');
+        const loginForm = document.getElementById('login-form');
+        const signupContainer = document.getElementById('signup-container');
+        const loginContainer = document.getElementById('login-container');
+        const gameSwitch = document.getElementById('game-switch');
+        const ticTacToeGame = document.getElementById('tic-tac-toe-game');
+        const snakeGame = document.getElementById('snake-game');
+        const blockGame = document.getElementById('block-game');
+        const logoutButton = document.getElementById('logout-button');
+        const restartTicTacToe = document.getElementById('restart-tic-tac-toe');
+        const restartSnake = document.getElementById('restart-snake');
+        const restartBlock = document.getElementById('restart-block');
+        const userPointsText = document.getElementById('user-points');
+        const snakeUserPoints = document.getElementById('snake-user-points');
+        const blockUserPoints = document.getElementById('block-user-points');
+        const users = JSON.parse(localStorage.getItem('users')) || {};
+        let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+        let points = currentUser ? currentUser.points : 1000;
+    
+        // Show user points if logged in
+        if (currentUser) {
+          showTicTacToeGame();
+        }
+    
+        // Show the Tic-Tac-Toe game
+        function showTicTacToeGame() {
+          ticTacToeGame.classList.remove('hidden');
+          snakeGame.classList.add('hidden');
+          blockGame.classList.add('hidden');
+          gameSwitch.classList.remove('hidden');
+          userPointsText.textContent = `Points: ${points}`;
+        }
+    
+        // Show the Snake game
+        function showSnakeGame() {
+          snakeGame.classList.remove('hidden');
+          ticTacToeGame.classList.add('hidden');
+          blockGame.classList.add('hidden');
+          gameSwitch.classList.remove('hidden');
+          snakeUserPoints.textContent = `Points: ${points}`;
+        }
+    
+        // Show the Block game
+        function showBlockGame() {
+          blockGame.classList.remove('hidden');
+          ticTacToeGame.classList.add('hidden');
+          snakeGame.classList.add('hidden');
+          gameSwitch.classList.remove('hidden');
+          blockUserPoints.textContent = `Points: ${points}`;
+        }
+    
+        // Toggle between games
+        document.getElementById('show-tic-tac-toe').addEventListener('click', showTicTacToeGame);
+        document.getElementById('show-snake').addEventListener('click', showSnakeGame);
+        document.getElementById('show-block').addEventListener('click', showBlockGame);
+    
+        // Handle Logout
+        logoutButton.addEventListener('click', () => {
+          localStorage.removeItem('currentUser');
+          currentUser = null;
+          points = 1000;
+          showLoginContainer();
+        });
+    
+        // Show the login container
+        function showLoginContainer() {
+          loginContainer.classList.remove('hidden');
+          signupContainer.classList.add('hidden');
+          ticTacToeGame.classList.add('hidden');
+          snakeGame.classList.add('hidden');
+          blockGame.classList.add('hidden');
+          gameSwitch.classList.add('hidden');
+        }
+    
+        // Handle Sign Up
+        signupForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const username = document.getElementById('signup-username').value;
+          const password = document.getElementById('signup-password').value;
+    
+          if (users[username]) {
+            alert('Username already exists!');
+          } else {
+            users[username] = { password, points: 1000 };
+            localStorage.setItem('users', JSON.stringify(users));
+            alert('Sign up successful! Please log in.');
+            signupContainer.classList.add('hidden');
+            loginContainer.classList.remove('hidden');
+          }
+        });
+    
+        // Handle Login
+        loginForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const username = document.getElementById('login-username').value;
+          const password = document.getElementById('login-password').value;
+    
+          if (users[username] && users[username].password === password) {
+            currentUser = { username, points: users[username].points };
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            showTicTacToeGame();
+          } else {
+            alert('Invalid username or password');
+          }
+        });
+    
+        // Tic-Tac-Toe Game Logic (simplified robotic version)
+        let board = Array(9).fill(null);
+        let currentPlayer = 'X'; // X is the user, O is the robot
+        const gameCells = document.querySelectorAll('.game-cell');
+    
+        gameCells.forEach(cell => {
+          cell.addEventListener('click', () => {
+            if (cell.textContent === '' && currentPlayer === 'X') {
+              cell.textContent = 'X';
+              board[cell.dataset.index] = 'X';
+              checkWinner();
+              currentPlayer = 'O';
+              robotMove();
+            }
+          });
+        });
+    
+        // Check for winner
+        function checkWinner() {
+          const winningCombinations = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8],
+            [0, 3, 6], [1, 4, 7], [2, 5, 8],
+            [0, 4, 8], [2, 4, 6]
+          ];
+          
+          for (let combination of winningCombinations) {
+            const [a, b, c] = combination;
+            if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+              alert(board[a] + ' wins!');
+              points += 100;
+              localStorage.setItem('currentUser', JSON.stringify({ ...currentUser, points }));
+              return;
+            }
+          }
+        }
+    
+        // Robot move
+        function robotMove() {
+          const availableCells = board.map((value, index) => value === null ? index : null).filter(index => index !== null);
+          if (availableCells.length === 0) return;
+    
+          const robotMove = availableCells[Math.floor(Math.random() * availableCells.length)];
+          board[robotMove] = 'O';
+          gameCells[robotMove].textContent = 'O';
+          checkWinner();
+          currentPlayer = 'X';
+        }
+    
+        // Restart Tic-Tac-Toe game
+        restartTicTacToe.addEventListener('click', () => {
+          board = Array(9).fill(null);
+          gameCells.forEach(cell => cell.textContent = '');
+          currentPlayer = 'X';
+        });
+    
+        // Snake Game and Block Game logic will be added similarly...
+      </script>
+    </body>
+
 </html>
